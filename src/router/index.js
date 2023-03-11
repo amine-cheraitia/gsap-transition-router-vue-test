@@ -29,13 +29,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 	if (to.meta.transitionName === "slide") {
+		gsap.to("#sl2", {
+			duration: 0.6,
+			y: "100%",
+		});
 		gsap.to("#sl", {
-			duration: 0.5,
-			y: "-100%",
+			duration: 0.8,
+			y: "100%",
 			onComplete: () => {
 				next();
+				gsap.to("#sl2", {
+					duration: 0.9,
+					y: 0,
+				});
 				gsap.to("#sl", {
-					duration: 0.5,
+					duration: 0.8,
 					y: 0,
 				});
 			},
