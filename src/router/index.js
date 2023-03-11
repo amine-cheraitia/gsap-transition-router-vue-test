@@ -1,25 +1,48 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import AboutView from "../views/AboutView.vue";
+import { gsap } from "gsap";
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+	{
+		path: "/",
+		name: "home",
+		component: HomeView,
+		meta: {
+			transitionName: "slide",
+		},
+	},
+	{
+		path: "/about",
+		name: "about",
+		component: AboutView,
+		meta: {
+			transitionName: "slide",
+		},
+	},
+];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+	history: createWebHistory(process.env.BASE_URL),
+	routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+	if (to.meta.transitionName === "slide") {
+		gsap.to("#sl", {
+			duration: 0.5,
+			y: "-100%",
+			onComplete: () => {
+				next();
+				gsap.to("#sl", {
+					duration: 0.5,
+					y: 0,
+				});
+			},
+		});
+	} else {
+		next();
+	}
+});
+
+export default router;
